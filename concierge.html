@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ask the Concierge — The Wandering Atlas</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="wrap">
+    <div class="brand">The Wandering<span class="dot">.</span>Atlas</div>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="blog.html">Journal</a>
+      <a href="about.html">About</a>
+      <a href="concierge.html">Ask the Concierge</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" style="padding:56px 0 30px;">
+  <div class="wrap">
+    <span class="eyebrow">AI Concierge</span>
+    <h1>Plan a trip with us</h1>
+    <p>Ask for an itinerary, a draft blog post, or a check on current prices and conditions.</p>
+  </div>
+</header>
+
+<section class="section">
+  <div class="wrap">
+
+    <!--
+      SETUP NOTE (remove this comment once configured):
+      Replace the placeholder box below with your embed code.
+
+      PATH A (free, requires visitor to have a Claude account):
+      1. Open wandering-atlas-concierge.html in Claude, click "Publish"
+      2. Click "Get embed code," add thewanderingatlas.org to Allowed domains
+      3. Paste the provided <iframe> snippet in place of the div below
+
+      PATH B (works for anonymous visitors, small usage-based API cost):
+      Replace the div below with an <iframe src="https://your-proxy-url"></iframe>
+      pointing at your own backend proxy.
+    -->
+    <div style="border:1px dashed var(--line); border-radius:12px; padding:40px 24px; text-align:center; color:rgba(27,27,24,0.55); background:#fff;">
+      <p style="margin:0 0 8px; font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.06em; text-transform:uppercase;">Concierge embed goes here</p>
+      <p style="margin:0; font-size:13.5px;">See the HTML comment in this file for the two setup options.</p>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>© <span id="year"></span> The Wandering Atlas</div>
+    <div class="social-links">
+      <a href="https://youtube.com/@thewanderingatlaslife" target="_blank" rel="noopener">YouTube</a>
+      <a href="https://instagram.com/thewanderingatlaslife" target="_blank" rel="noopener">Instagram</a>
+    </div>
+  </div>
+</footer>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
