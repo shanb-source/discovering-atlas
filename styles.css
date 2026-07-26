@@ -115,6 +115,79 @@ nav.site-nav .wrap{
 }
 .btn.ghost:hover{border-color:var(--gold); color:var(--gold-soft);}
 
+/* Full-bleed photo hero (swap the background-image URL for your own photo) */
+.photo-hero{
+  position:relative;
+  min-height:520px;
+  background-size:cover;
+  background-position:center;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  color:#fff;
+  /* REPLACE this gradient with: background-image:url('images/your-photo.jpg'); background-size:cover; background-position:center; */
+  background-image:linear-gradient(160deg, var(--navy) 0%, var(--teal) 100%);
+}
+.photo-hero::before{
+  content:"";
+  position:absolute; inset:0;
+  background:linear-gradient(180deg, rgba(8,20,40,0.15) 0%, rgba(8,20,40,0.55) 100%);
+}
+.photo-hero-content{
+  position:relative;
+  z-index:1;
+  max-width:800px;
+  padding:0 24px;
+}
+.photo-hero .eyebrow-script{
+  font-family:'Fraunces',serif;
+  font-style:italic;
+  font-size:20px;
+  color:var(--gold-soft);
+  margin-bottom:10px;
+  display:block;
+}
+.photo-hero h2{
+  font-family:'Inter',sans-serif;
+  font-weight:600;
+  font-size:clamp(24px,4.5vw,42px);
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  line-height:1.35;
+  margin:0 0 26px;
+}
+.photo-hero .btn-outline{
+  display:inline-block;
+  border:1px solid rgba(255,255,255,0.6);
+  color:#fff;
+  font-size:12px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  padding:13px 28px;
+  border-radius:2px;
+}
+.photo-hero .btn-outline:hover{border-color:var(--gold); color:var(--gold-soft);}
+
+/* Category section with "See all" pattern */
+.category-header{
+  display:flex; justify-content:space-between; align-items:baseline;
+  margin-bottom:24px;
+}
+.category-header .see-all{
+  font-family:'Fraunces',serif;
+  font-style:italic;
+  font-size:14px;
+  border-bottom:1px solid var(--line);
+}
+.photo-card .photo{
+  height:260px;
+  background-size:cover;
+  background-position:center;
+  /* REPLACE with your own photo: background-image:url('images/your-photo.jpg'); */
+  background-image:linear-gradient(160deg, var(--navy) 0%, var(--teal) 130%);
+}
+
 /* Section headings */
 .section{padding:56px 0;}
 .section h2{

@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Discovering Atlas — Concierge</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root{
+    --navy:#0F2340;
+    --navy-deep:#081428;
+    --gold:#C6A15B;
+    --gold-soft:#E4CE9C;
+    --cream:#F6F0E2;
+    --ink:#1B1B18;
+    --teal:#2F6E6E;
+    --line:rgba(15,35,64,0.14);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+  }
+  .app{
+    max-width:760px;
+    margin:0 auto;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    background:
+      radial-gradient(circle at 15% -10%, rgba(198,161,91,0.14), transparent 45%),
+      var(--cream);
+    border-left:1px solid var(--line);
+    border-right:1px solid var(--line);
+  }
+
+  /* Header — boarding pass / passport strip */
+  header{
+    background:var(--navy);
+    color:var(--gold-soft);
+    padding:22px 24px 18px;
+    position:relative;
+    overflow:hidden;
+  }
+  header::after{
+    content:"";
+    position:absolute;
+    right:-30px; top:-30px;
+    width:160px; height:160px;
+    border:1px solid rgba(230,206,156,0.18);
+    border-radius:50%;
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--gold);
+    opacity:0.85;
+  }
+  h1{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:30px;
+    margin:6px 0 4px;
+    color:#FBF7EC;
+    letter-spacing:0.01em;
+  }
+  .tagline{
+    font-size:13.5px;
+    color:rgba(251,247,236,0.72);
+    max-width:46ch;
+  }
+  .route-line{
+    margin-top:16px;
+    height:1px;
+    background:linear-gradient(90deg, var(--gold) 0%, rgba(198,161,91,0.15) 100%);
+    position:relative;
+  }
+  .route-line .dot{
+    position:absolute; top:-3px; left:0;
+    width:7px;height:7px;border-radius:50%;
+    background:var(--gold);
+    box-shadow:0 0 0 3px rgba(198,161,91,0.2);
+    animation:travel 2.6s ease-in-out infinite;
+  }
+  @keyframes travel{
+    0%,100%{left:0;}
+    50%{left:calc(100% - 7px);}
+  }
+
+  /* Quick starts */
+  .quickstarts{
+    display:flex; gap:8px; flex-wrap:wrap;
+    padding:16px 24px 4px;
+  }
+  .chip{
+    font-family:'Inter',sans-serif;
+    font-size:12.5px;
+    border:1px solid var(--line);
+    background:#fff;
+    color:var(--navy);
+    padding:7px 12px;
+    border-radius:999px;
+    cursor:pointer;
+    transition:all .15s ease;
+  }
+  .chip:hover{border-color:var(--gold); background:var(--gold-soft); }
+
+  /* Chat area */
+  .chat{
+    flex:1;
+    padding:18px 24px 12px;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    overflow-y:auto;
+  }
+  .msg{
+    max-width:88%;
+    line-height:1.55;
+    font-size:14.5px;
+  }
+  .msg.user{
+    align-self:flex-end;
+    background:var(--navy);
+    color:#F6F0E2;
+    padding:11px 15px;
+    border-radius:14px 14px 3px 14px;
+  }
+  .msg.agent{
+    align-self:flex-start;
+    background:#fff;
+    border:1px solid var(--line);
+    padding:13px 16px;
+    border-radius:3px 14px 14px 14px;
+    white-space:pre-wrap;
+  }
+  .msg.agent .stamp{
+    display:inline-block;
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--teal);
+    border:1px solid rgba(47,110,110,0.3);
+    padding:2px 7px;
+    border-radius:4px;
+    margin-bottom:8px;
+  }
+  .researching{
+    align-self:flex-start;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11.5px;
+    color:var(--navy);
+    display:flex; align-items:center; gap:8px;
+    padding:4px 2px;
+  }
+  .researching .compass{
+    width:12px;height:12px;
+    border:1.5px solid var(--gold);
+    border-radius:50%;
+    position:relative;
+    animation:spin 1.1s linear infinite;
+  }
+  .researching .compass::after{
+    content:"";
+    position:absolute; top:1px; left:50%;
+    width:1.5px; height:4px;
+    background:var(--gold);
+    transform:translateX(-50%);
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* Input */
+  .inputbar{
+    display:flex; gap:8px;
+    padding:14px 24px 22px;
+    border-top:1px solid var(--line);
+    background:var(--cream);
+  }
+  textarea{
+    flex:1;
+    resize:none;
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:11px 13px;
+    font-family:'Inter',sans-serif;
+    font-size:14px;
+    background:#fff;
+    color:var(--ink);
+    min-height:44px;
+    max-height:120px;
+  }
+  textarea:focus{outline:none; border-color:var(--gold);}
+  button.send{
+    background:var(--navy);
+    color:var(--gold-soft);
+    border:none;
+    border-radius:10px;
+    padding:0 18px;
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:13.5px;
+    cursor:pointer;
+  }
+  button.send:disabled{opacity:0.5; cursor:default;}
+  button.send:hover:not(:disabled){background:var(--navy-deep);}
+
+  .empty-hint{
+    color:rgba(27,27,24,0.5);
+    font-size:13px;
+    text-align:center;
+    margin-top:24px;
+  }
+  .memory-bar{
+    display:none;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:9px 24px;
+    background:var(--gold-soft);
+    border-bottom:1px solid var(--line);
+    font-size:12px;
+    color:var(--navy);
+  }
+  .memory-bar.show{display:flex;}
+  .memory-bar button{
+    background:none;
+    border:1px solid rgba(15,35,64,0.3);
+    color:var(--navy);
+    font-size:11px;
+    padding:4px 9px;
+    border-radius:6px;
+    cursor:pointer;
+    font-family:'Inter',sans-serif;
+  }
+  .memory-bar button:hover{background:rgba(15,35,64,0.08);}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="eyebrow">Discovering Atlas · AI Concierge</div>
+    <h1>Where to next?</h1>
+    <div class="tagline">Plan an itinerary, draft a post in our voice, or ask anything — I'll check current prices, hours, and conditions before I answer.</div>
+    <div class="route-line"><div class="dot"></div></div>
+  </header>
+
+  <div class="memory-bar" id="memoryBar">
+    <span id="memoryText">Welcome back — picking up your last trip conversation.</span>
+    <button id="clearMemory">Start a new trip</button>
+  </div>
+
+  <div class="quickstarts" id="quickstarts">
+    <div class="chip" data-q="Plan a 5-day Kyoto itinerary for a family of 3, mixing temples with kid-friendly stops.">Plan a Kyoto family itinerary</div>
+    <div class="chip" data-q="Draft a 400-word Wandering Atlas blog post about Iguazu Falls, warm and detail-rich, family travel angle.">Draft an Iguazu Falls post</div>
+    <div class="chip" data-q="Is Yosemite Valley open and accessible in December? Any road closures I should plan around?">Check Yosemite in December</div>
+    <div class="chip" data-q="What's a realistic 3-day budget for a family of 3 in Lisbon right now?">Lisbon family budget check</div>
+  </div>
+
+  <div class="chat" id="chat">
+    <div class="empty-hint">Your first message starts the trip.</div>
+  </div>
+
+  <div class="inputbar">
+    <textarea id="input" placeholder="Ask about a destination, request an itinerary, or say 'draft a post about…'" rows="1"></textarea>
+    <button class="send" id="sendBtn">Send</button>
+  </div>
+</div>
+
+<script>
+const chatEl = document.getElementById('chat');
+const inputEl = document.getElementById('input');
+const sendBtn = document.getElementById('sendBtn');
+const quickstarts = document.getElementById('quickstarts');
+let history = [];
+let firstMessageSent = false;
+const MEMORY_KEY = 'trip-history';
+const MAX_STORED_MESSAGES = 20; // keep storage light and requests fast
+
+async function loadMemory(){
+  try{
+    const result = await window.storage.get(MEMORY_KEY);
+    if(result && result.value){
+      const saved = JSON.parse(result.value);
+      if(Array.isArray(saved) && saved.length){
+        history = saved;
+        firstMessageSent = true;
+        quickstarts.style.display = 'none';
+        chatEl.querySelector('.empty-hint')?.remove();
+        history.forEach(turn => {
+          if(turn.role === 'user' || turn.role === 'assistant'){
+            addMessage(turn.role === 'assistant' ? 'agent' : 'user', turn.content, false);
+          }
+        });
+        document.getElementById('memoryBar').classList.add('show');
+      }
+    }
+  } catch(err){
+    // no saved memory yet — that's fine, start fresh
+  }
+}
+
+async function saveMemory(){
+  try{
+    const trimmed = history.slice(-MAX_STORED_MESSAGES);
+    await window.storage.set(MEMORY_KEY, JSON.stringify(trimmed));
+  } catch(err){
+    console.error('Could not save trip memory:', err);
+  }
+}
+
+async function clearMemory(){
+  try{
+    await window.storage.delete(MEMORY_KEY);
+  } catch(err){ /* nothing to clear */ }
+  history = [];
+  firstMessageSent = false;
+  chatEl.innerHTML = '<div class="empty-hint">Your first message starts the trip.</div>';
+  quickstarts.style.display = 'flex';
+  document.getElementById('memoryBar').classList.remove('show');
+}
+
+document.getElementById('clearMemory').addEventListener('click', clearMemory);
+loadMemory();
+
+const SYSTEM_PROMPT = `You are the Wandering Atlas Concierge — the AI travel agent for Discovering Atlas, a family travel brand run by a mother, father, and their daughter who have traveled to 65+ countries across 6 continents. Your voice is warm, well-traveled, practical, and detail-rich — like a seasoned TPM plans a trip: thorough, honest about tradeoffs, never fluffy.
+
+You handle three kinds of requests, and should recognize which one you're in from the user's message:
+
+1. ITINERARY PLANNING — produce a clear day-by-day plan. Be concrete: named places, realistic pacing for a family with a school-age kid, and one honest caveat per day if relevant (crowds, weather, closures).
+
+2. BLOG POST DRAFTING — write in the Wandering Atlas editorial voice: first-person plural ("we"), sensory and specific, no generic travel-blog filler ("nestled in the heart of..."). Include a suggested title. Keep drafts to the requested length.
+
+3. DESTINATION Q&A / FACT-CHECKING — answer directly and conversationally.
+
+For ANY request involving current information — prices, opening hours, visa rules, road/park closures, weather, safety advisories, or anything that changes over time — use the web_search tool before answering. Never guess at current prices or hours. When you cite something from a search, mention the source naturally in prose (e.g. "per the park service's site") without quoting text verbatim — paraphrase everything.
+
+Keep responses tight: this is a mobile chat interface. Prefer short paragraphs or a scannable list over long blocks.`;
+
+function addMessage(role, text){
+  const hint = chatEl.querySelector('.empty-hint');
+  if(hint) hint.remove();
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+  if(role === 'agent'){
+    div.innerHTML = '<span class="stamp">Concierge</span>' + escapeHtml(text);
+  } else {
+    div.textContent = text;
+  }
+  chatEl.appendChild(div);
+  chatEl.scrollTop = chatEl.scrollHeight;
+  return div;
+}
+
+function escapeHtml(str){
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+function addResearchingIndicator(){
+  const div = document.createElement('div');
+  div.className = 'researching';
+  div.id = 'researchingIndicator';
+  div.innerHTML = '<span class="compass"></span> researching current conditions…';
+  chatEl.appendChild(div);
+  chatEl.scrollTop = chatEl.scrollHeight;
+  return div;
+}
+
+async function sendMessage(text){
+  if(!text.trim()) return;
+  if(!firstMessageSent){
+    quickstarts.style.display = 'none';
+    firstMessageSent = true;
+  }
+  addMessage('user', text);
+  history.push({ role: 'user', content: text });
+  inputEl.value = '';
+  sendBtn.disabled = true;
+
+  const researchingEl = addResearchingIndicator();
+
+  try{
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 1000,
+        system: SYSTEM_PROMPT,
+        messages: history,
+        tools: [{ type: "web_search_20250305", name: "web_search" }]
+      })
+    });
+
+    const data = await response.json();
+    researchingEl.remove();
+
+    if(!data.content){
+      addMessage('agent', "Something went wrong reaching the concierge desk — try again in a moment.");
+      sendBtn.disabled = false;
+      return;
+    }
+
+    const textBlocks = data.content
+      .filter(item => item.type === "text")
+      .map(item => item.text)
+      .join("\n\n");
+
+    const usedSearch = data.content.some(item =>
+      item.type === "server_tool_use" || item.type === "web_search_tool_result"
+    );
+
+    addMessage('agent', textBlocks || "(no response text)");
+
+    // store assistant turn back into history for multi-turn context
+    history.push({ role: 'assistant', content: textBlocks });
+    saveMemory();
+    document.getElementById('memoryBar').classList.remove('show'); // banner was only for restored sessions
+
+  } catch(err){
+    researchingEl.remove();
+    addMessage('agent', "Connection hiccup — the concierge didn't get through. Try again?");
+    console.error(err);
+  }
+
+  sendBtn.disabled = false;
+  inputEl.focus();
+}
+
+sendBtn.addEventListener('click', () => sendMessage(inputEl.value));
+inputEl.addEventListener('keydown', (e) => {
+  if(e.key === 'Enter' && !e.shiftKey){
+    e.preventDefault();
+    sendMessage(inputEl.value);
+  }
+});
+inputEl.addEventListener('input', () => {
+  inputEl.style.height = 'auto';
+  inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + 'px';
+});
+quickstarts.addEventListener('click', (e) => {
+  const chip = e.target.closest('.chip');
+  if(chip) sendMessage(chip.dataset.q);
+});
+</script>
+</body>
+</html>

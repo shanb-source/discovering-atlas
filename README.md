@@ -1,4 +1,4 @@
-# The Wandering Atlas — Site Files
+# Discovering Atlas — Site Files
 
 Static site, ready for GitHub Pages. No build step required.
 
@@ -10,7 +10,7 @@ Static site, ready for GitHub Pages. No build step required.
 - `blog-yosemite.html`, `blog-niagara.html`, `blog-argentina.html` — stub posts, ready for you to fill in
 - `concierge.html` — placeholder page for the AI concierge embed (see setup note inside the file)
 - `styles.css` — shared styling, navy/gold brand
-- `CNAME` — tells GitHub Pages to serve this at thewanderingatlas.org (already filled in — leave as is)
+- `CNAME` — tells GitHub Pages to serve this at discoveringatlas.org (already filled in — leave as is)
 
 ## Setup steps
 
@@ -18,8 +18,8 @@ Static site, ready for GitHub Pages. No build step required.
 2. Create a new repository (Settings icon → New repository). Name it anything, e.g. `wandering-atlas`. Make it **Public**. Don't add a template.
 3. Upload every file in this folder to the repo (drag-and-drop works on github.com, or use `git push` if you're comfortable with git).
 4. In the repo: **Settings → Pages**. Under "Build and deployment," set Source = "Deploy from a branch," Branch = `main`, folder = `/ (root)`. Save.
-5. Still in **Settings → Pages**, under "Custom domain" enter `thewanderingatlas.org` and save. (The CNAME file already in this folder does the rest.)
-6. Go to your domain registrar (wherever you bought thewanderingatlas.org) and add these DNS records:
+5. Still in **Settings → Pages**, under "Custom domain" enter `discoveringatlas.org` and save. (The CNAME file already in this folder does the rest.)
+6. Go to your domain registrar (wherever you bought discoveringatlas.org) and add these DNS records:
    - Four **A records** for the root domain, pointing to:
      - `185.199.108.153`
      - `185.199.109.153`
