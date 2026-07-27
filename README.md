@@ -2,6 +2,7 @@
 
 Static site, ready for GitHub Pages. No build step required.
 
+
 ## What's here
 - `index.html` — home page
 - `about.html` — your story
