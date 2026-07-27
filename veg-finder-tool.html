@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Discovering Atlas — Vegetarian Finder</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root{
+    --navy:#0F2340;
+    --navy-deep:#081428;
+    --gold:#C6A15B;
+    --gold-soft:#E4CE9C;
+    --cream:#F6F0E2;
+    --ink:#1B1B18;
+    --leaf:#4C7A52;
+    --leaf-soft:#E7EFE3;
+    --line:rgba(15,35,64,0.14);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+  }
+  .app{
+    max-width:720px;
+    margin:0 auto;
+    min-height:100vh;
+    background:var(--cream);
+    border-left:1px solid var(--line);
+    border-right:1px solid var(--line);
+  }
+
+  header{
+    background:var(--navy);
+    color:#FBF7EC;
+    padding:26px 24px 22px;
+    position:relative;
+    overflow:hidden;
+  }
+  header::after{
+    content:"";
+    position:absolute; right:-24px; top:-24px;
+    width:120px; height:120px;
+    border:1px solid rgba(230,206,156,0.16);
+    border-radius:50%;
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--gold);
+  }
+  h1{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:28px;
+    margin:8px 0 6px;
+  }
+  .tagline{
+    font-size:13.5px;
+    color:rgba(251,247,236,0.72);
+    max-width:48ch;
+  }
+
+  .search-panel{
+    padding:20px 24px;
+    border-bottom:1px solid var(--line);
+    background:#fff;
+  }
+  .search-row{
+    display:flex; gap:8px;
+  }
+  input[type=text]{
+    flex:1;
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:12px 14px;
+    font-family:'Inter',sans-serif;
+    font-size:14.5px;
+    background:var(--cream);
+  }
+  input[type=text]:focus{outline:none; border-color:var(--leaf);}
+  button.search-btn{
+    background:var(--leaf);
+    color:#fff;
+    border:none;
+    border-radius:10px;
+    padding:0 20px;
+    font-weight:600;
+    font-size:13.5px;
+    cursor:pointer;
+  }
+  button.search-btn:hover:not(:disabled){background:#3d6543;}
+  button.search-btn:disabled{opacity:0.5;}
+
+  .filter-row{
+    display:flex; gap:8px; flex-wrap:wrap;
+    margin-top:12px;
+  }
+  .filter-chip{
+    font-size:12px;
+    border:1px solid var(--line);
+    background:var(--cream);
+    padding:6px 12px;
+    border-radius:999px;
+    cursor:pointer;
+    color:var(--navy);
+  }
+  .filter-chip.active{
+    background:var(--leaf-soft);
+    border-color:var(--leaf);
+    color:var(--leaf);
+    font-weight:600;
+  }
+
+  .results{
+    padding:20px 24px 40px;
+  }
+  .empty-state{
+    text-align:center;
+    color:rgba(27,27,24,0.5);
+    font-size:13.5px;
+    margin-top:40px;
+    line-height:1.6;
+  }
+  .empty-state .leaf-icon{font-size:28px; display:block; margin-bottom:10px;}
+
+  .searching{
+    display:flex; align-items:center; gap:8px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    color:var(--navy);
+    margin-top:24px;
+  }
+  .searching .spin{
+    width:12px;height:12px;
+    border:2px solid var(--leaf-soft);
+    border-top-color:var(--leaf);
+    border-radius:50%;
+    animation:spin 0.8s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  .result-intro{
+    font-size:13.5px;
+    color:rgba(27,27,24,0.7);
+    margin-bottom:16px;
+    line-height:1.6;
+    white-space:pre-wrap;
+  }
+
+  .disclaimer{
+    margin-top:24px;
+    padding:12px 14px;
+    background:var(--leaf-soft);
+    border-radius:8px;
+    font-size:12px;
+    color:var(--leaf);
+    line-height:1.5;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="eyebrow">Discovering Atlas · Tools</div>
+    <h1>Vegetarian Finder</h1>
+    <div class="tagline">Tell us where you're headed — we'll find vegetarian and vegan-friendly spots and check what's actually current.</div>
+  </header>
+
+  <div class="search-panel">
+    <div class="search-row">
+      <input type="text" id="destInput" placeholder="City or neighborhood, e.g. 'Lisbon' or 'Kyoto, Gion district'">
+      <button class="search-btn" id="searchBtn">Find</button>
+    </div>
+    <div class="filter-row" id="filterRow">
+      <div class="filter-chip active" data-filter="vegetarian">Vegetarian</div>
+      <div class="filter-chip" data-filter="vegan">Vegan</div>
+      <div class="filter-chip" data-filter="budget">Budget-friendly</div>
+      <div class="filter-chip" data-filter="family">Family-friendly</div>
+    </div>
+  </div>
+
+  <div class="results" id="results">
+    <div class="empty-state">
+      <span class="leaf-icon">🌿</span>
+      Search a destination to get started.<br>We'll pull current, real options — not a fixed list.
+    </div>
+  </div>
+</div>
+
+<script>
+const destInput = document.getElementById('destInput');
+const searchBtn = document.getElementById('searchBtn');
+const resultsEl = document.getElementById('results');
+const filterRow = document.getElementById('filterRow');
+
+let activeFilters = new Set(['vegetarian']);
+
+filterRow.addEventListener('click', (e) => {
+  const chip = e.target.closest('.filter-chip');
+  if (!chip) return;
+  const f = chip.dataset.filter;
+  if (activeFilters.has(f)) {
+    activeFilters.delete(f);
+    chip.classList.remove('active');
+  } else {
+    activeFilters.add(f);
+    chip.classList.add('active');
+  }
+});
+
+function buildQuery(destination) {
+  const parts = [];
+  if (activeFilters.has('vegan')) parts.push('vegan');
+  if (activeFilters.has('vegetarian') && !activeFilters.has('vegan')) parts.push('vegetarian');
+  if (activeFilters.has('budget')) parts.push('budget-friendly');
+  if (activeFilters.has('family')) parts.push('family-friendly, good for kids');
+  const filterText = parts.length ? parts.join(', ') : 'vegetarian-friendly';
+  return `Find current, real vegetarian/vegan-friendly restaurants and cafes in ${destination}. Preferences: ${filterText}. For each place give: name, neighborhood, what makes it good for vegetarians (fully veg menu vs. veg-friendly with clear options), and one practical tip (price range, popular dish, or a caveat like "call ahead" or "small menu"). Search the web for current listings and reviews before answering — don't rely on memory, restaurants close and menus change. List 5-8 places. Keep each entry to 2-3 sentences. Start with a one-sentence overview of the vegetarian food scene in this destination, then list the places.`;
+}
+
+async function search() {
+  const destination = destInput.value.trim();
+  if (!destination) return;
+
+  searchBtn.disabled = true;
+  resultsEl.innerHTML = `<div class="searching"><span class="spin"></span> searching current listings for ${escapeHtml(destination)}…</div>`;
+
+  try {
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 1200,
+        messages: [{ role: "user", content: buildQuery(destination) }],
+        tools: [{ type: "web_search_20250305", name: "web_search" }]
+      })
+    });
+
+    const data = await response.json();
+
+    if (!data.content) {
+      resultsEl.innerHTML = `<div class="empty-state">Something went wrong — try again in a moment.</div>`;
+      searchBtn.disabled = false;
+      return;
+    }
+
+    const textBlocks = data.content
+      .filter(item => item.type === "text")
+      .map(item => item.text)
+      .join("\n\n");
+
+    resultsEl.innerHTML = `
+      <div class="result-intro">${escapeHtml(textBlocks)}</div>
+      <div class="disclaimer">🌿 Hours, menus, and openings change — double-check before you go, especially for smaller or newer spots.</div>
+    `;
+
+  } catch (err) {
+    resultsEl.innerHTML = `<div class="empty-state">Connection hiccup — try searching again.</div>`;
+    console.error(err);
+  }
+
+  searchBtn.disabled = false;
+}
+
+function escapeHtml(str) {
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+searchBtn.addEventListener('click', search);
+destInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') search();
+});
+</script>
+</body>
+</html>
